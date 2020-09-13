@@ -67,21 +67,25 @@ def convert_to_postfix(input)
 end
 
 def calculate_postfix(expression_stack)
-  expression_stack.reverse!
+  result_stack = []
+  operator = '+-*/'
 
   return 'Nothing to calculate' unless expression_stack.length >= 3
 
-  until expression_stack.length <= 1
-    n1 = expression_stack.pop
-    n2 = expression_stack.pop
-    op = expression_stack.pop
-
-    result = calculate(n1.to_f, n2.to_f, op)
-
-    expression_stack.push result
+  # Scan the postfix stack one by one
+  expression_stack.each do |c|
+    # If the scanned character is a number, push it to the result stack
+    if !operator.include? c
+      result_stack.push c
+    else
+      # If the scanned character is an operator, pop to numbers from the results stack and apply the operator
+      n2 = result_stack.pop
+      n1 = result_stack.pop
+      result_stack.push calculate(n1.to_f, n2.to_f, c)
+    end
   end
 
-  expression_stack.pop
+  result_stack.pop
 end
 
 title = 'WELCOME TO SUPER CALCULATOR'
